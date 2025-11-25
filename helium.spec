@@ -1,21 +1,15 @@
 %define app_name helium
 %define version 0.6.7.1
 
-%ifarch aarch64
-%define release_arch arm64
-%endif
-%ifarch x86_64
-%define release_arch x86_64
-%endif
-
 Name:           %{app_name}
 Version:        %{version}
 Release:        1%{?dist}
 Summary:        Helium Browser
 License:        GPL-3.0
 URL:            https://github.com/imputnet/helium
-Source0:        https://github.com/imputnet/helium-linux/releases/download/%{version}/%{app_name}-%{version}-%{release_arch}_linux.tar.xz
-Source1:        helium-wrapper
+Source0:        https://github.com/imputnet/helium-linux/releases/download/%{version}/%{app_name}-%{version}-x86_64_linux.tar.xz
+Source1:        https://github.com/imputnet/helium-linux/releases/download/%{version}/%{app_name}-%{version}-arm64_linux.tar.xz
+Source2:        helium-wrapper
 
 %global debug_package %{nil}
 %global __brp_check_rpaths %{nil}
@@ -24,7 +18,13 @@ Source1:        helium-wrapper
 Helium is a lightweight, fast, and secure web browser based on Chromium.
 
 %prep
-%setup -q -n %{app_name}-%{version}-%{release_arch}_linux
+%ifarch x86_64
+%setup -q -T -b 0 -n %{app_name}-%{version}-x86_64_linux
+%endif
+
+%ifarch aarch64
+%setup -q -T -b 1 -n %{app_name}-%{version}-arm64_linux
+%endif
 
 %build
 # No build needed
@@ -40,7 +40,7 @@ cp -a * %{buildroot}/opt/%{app_name}/
 # Install proper wrapper and link it to bindir
 rm -f %{buildroot}/opt/%{app_name}/chrome-wrapper
 
-install -m 755 %{SOURCE1} %{buildroot}/opt/%{app_name}/helium-wrapper
+install -m 755 %{SOURCE2} %{buildroot}/opt/%{app_name}/helium-wrapper
 ln -sf /opt/%{app_name}/helium-wrapper %{buildroot}%{_bindir}/%{app_name}
 
 # Install icon
