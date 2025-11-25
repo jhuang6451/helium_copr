@@ -1,9 +1,9 @@
-%define app_name helium
-%define version 0.6.7.1
+%define app_name helium-browser
+%define version 0.6.6.1
 
 Name:           %{app_name}
 Version:        %{version}
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Helium Browser
 License:        GPL-3.0
 URL:            https://github.com/imputnet/helium
@@ -77,23 +77,11 @@ fi
 /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %changelog
-* Tue Nov 25 2025 GitHub Action <action@github.com> - 0.6.7.1
-- Auto-updated to version 0.6.7.1
+* Tue Nov 25 2025 jhuang6451 <xplayerhtz123@gmail.com> - 0.6.6.1-3
+- Fix source files and architecture definitions
 
-* Tue Nov 25 2025 GitHub Action <action@github.com> - 0.6.7.1
-- Auto-updated to version 0.6.7.1
-
-* Tue Nov 25 2025 GitHub Action <action@github.com> - 0.6.7.1
-- Auto-updated to version 0.6.7.1
-
-* Tue Nov 25 2025 GitHub Action <action@github.com> - 0.6.7.1
-- Auto-updated to version 0.6.7.1
-
-* Tue Nov 25 2025 GitHub Action <action@github.com> - 0.6.7.1
-- Auto-updated to version 0.6.7.1
-
-* Tue Nov 26 2024 jhuang6451 <xplayerhtz123@gmail.com> - 0.6.7.1-2
+* Tue Nov 25 2025 jhuang6451 <xplayerhtz123@gmail.com> - 0.6.6.1-2
 - Replace wrapper script
 
-* Tue Nov 26 2024 jhuang6451 <xplayerhtz123@gmail.com> - 0.6.7.1-1
-- Initial RPM release based on version 0.6.7.1
+* Tue Nov 25 2025 jhuang6451 <xplayerhtz123@gmail.com> - 0.6.6.1-1
+- Initial RPM release based on version 0.6.6.1
