@@ -65,8 +65,14 @@ jobs:
           # 5. Push changes
           git push
 
-      - name: Trigger Copr Build
+      - name: Create and Push Tag
         if: steps.upstream.outputs.version != steps.local.outputs.version
         run: |
-          curl -X POST "${{ secrets.COPR_WEBHOOK_URL }}"
-          echo "Copr build triggered."
+          NEW_VER="${{ steps.upstream.outputs.version }}"
+          TAG_NAME="$NEW_VER"
+          
+          echo "Creating new tag: $TAG_NAME"
+          
+          git tag $TAG_NAME
+          
+          git push origin $TAG_NAME
