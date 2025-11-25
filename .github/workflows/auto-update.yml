@@ -1,0 +1,69 @@
+name: Auto Update from Upstream
+
+on:
+  schedule:
+    # 每 6 小时检查一次 (UTC时间)
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get latest upstream version
+        id: upstream
+        run: |
+          LATEST_TAG=$(curl -s https://api.github.com/repos/imputnet/helium-linux/releases/latest | jq -r .tag_name)
+          
+          echo "Found upstream version: $LATEST_TAG"
+          echo "version=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+      - name: Get local spec version
+        id: local
+        run: |
+          SPEC_FILE="helium.spec" 
+          
+          CURRENT_VERSION=$(grep "%define version" $SPEC_FILE | awk '{print $3}')
+          
+          echo "Current local version: $CURRENT_VERSION"
+          echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Compare and Update
+        if: steps.upstream.outputs.version != steps.local.outputs.version
+        run: |
+          NEW_VER="${{ steps.upstream.outputs.version }}"
+          SPEC_FILE="helium.spec"
+          
+          echo "Update detected! Upgrading from ${{ steps.local.outputs.version }} to $NEW_VER"
+
+          # 1. Update version in spec file
+          sed -i "s/%define version .*/%define version $NEW_VER/" $SPEC_FILE
+          
+          # 2. Reset Release number to 1 (usually reset release on each version upgrade)
+          # This step finds "Release: <number>..." and changes it to "Release: 1..."
+          sed -i "s/^Release: .*/Release:        1%{?dist}/" $SPEC_FILE
+
+          # 3. Update %changelog
+            CHANGELOG_ENTRY="* $(date +"%a %b %d %Y") GitHub Action <action@github.com> - $NEW_VER\n- Auto-updated to version $NEW_VER"
+
+            sed -i "s|^%changelog|%changelog\n$CHANGELOG_ENTRY\n|" $SPEC_FILE
+
+          # 4. Configure Git user information
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          # 5. Commit changes
+          git add $SPEC_FILE
+          git commit -m "Auto-update to version $NEW_VER"
+          
+          # 5. Push changes
+          git push
+
+      - name: Trigger Copr Build
+        if: steps.upstream.outputs.version != steps.local.outputs.version
+        run: |
+          curl -X POST "${{ secrets.COPR_WEBHOOK_URL }}"
+          echo "Copr build triggered."
