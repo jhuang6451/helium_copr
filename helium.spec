@@ -1,5 +1,5 @@
 %define app_name helium
-%define version 0.6.7.1
+%define version 0.6.6.1
 
 %ifarch aarch64
 %define release_arch arm64
