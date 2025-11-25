@@ -10,11 +10,12 @@
 
 Name:           %{app_name}
 Version:        %{version}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Helium Browser
 License:        GPL-3.0
 URL:            https://github.com/imputnet/helium
 Source0:        https://github.com/imputnet/helium-linux/releases/download/%{version}/%{app_name}-%{version}-%{release_arch}_linux.tar.xz
+Source1:        helium-wrapper
 
 %global debug_package %{nil}
 %global __brp_check_rpaths %{nil}
@@ -34,10 +35,13 @@ mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datadir}/applications
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/256x256/apps
 
-cp -r %{_sourcedir}/* %{buildroot}/opt/%{app_name}/
+cp -a * %{buildroot}/opt/%{app_name}/
 
-# Link wrapper to bindir
-ln -sf /opt/%{app_name}/chrome-wrapper %{buildroot}%{_bindir}/%{app_name}
+# Install proper wrapper and link it to bindir
+rm -f %{buildroot}/opt/%{app_name}/chrome-wrapper
+
+install -m 755 %{SOURCE1} %{buildroot}/opt/%{app_name}/helium-wrapper
+ln -sf /opt/%{app_name}/helium-wrapper %{buildroot}%{_bindir}/%{app_name}
 
 # Install icon
 install -m 644 product_logo_256.png %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/%{app_name}.png
@@ -47,7 +51,7 @@ install -m 644 product_logo_256.png %{buildroot}%{_datadir}/icons/hicolor/256x25
 sed -i 's|Exec=chromium|Exec=%{app_name}|g' %{buildroot}/opt/%{app_name}/%{app_name}.desktop
 sed -i 's|Icon=.*|Icon=%{app_name}|g' %{buildroot}/opt/%{app_name}/%{app_name}.desktop
 
-cp %{buildroot}/opt/%{app_name}/%{app_name}.desktop %{buildroot}%{_datadir}/applications/
+mv %{buildroot}/opt/%{app_name}/%{app_name}.desktop %{buildroot}%{_datadir}/applications/
 
 %files
 %defattr(-,root,root,-)
@@ -73,5 +77,8 @@ fi
 /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %changelog
+* Tue Nov 26 2024 jhuang6451 <xplayerhtz123@gmail.com> - 0.6.7.1-2
+- Replace wrapper script
+
 * Tue Nov 26 2024 jhuang6451 <xplayerhtz123@gmail.com> - 0.6.7.1-1
 - Initial RPM release based on version 0.6.7.1
