@@ -1,5 +1,5 @@
 %define app_name helium
-%define version 0.6.6.1
+%define version 0.6.7.1
 
 Name:           helium-browser
 Version:        %{version}
@@ -77,6 +77,9 @@ fi
 /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %changelog
+* Tue Nov 25 2025 GitHub Action <action@github.com> - 0.6.7.1
+- Auto-updated to version 0.6.7.1
+
 * Tue Nov 25 2025 jhuang6451 <xplayerhtz123@gmail.com> - 0.6.6.1-3
 - Fix source files and architecture definitions
 
