@@ -1,5 +1,5 @@
 %define app_name helium
-%define version 0.6.6.1
+%define version 0.6.7.1
 
 %ifarch aarch64
 %define release_arch arm64
@@ -10,7 +10,7 @@
 
 Name:           %{app_name}
 Version:        %{version}
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        Helium Browser
 License:        GPL-3.0
 URL:            https://github.com/imputnet/helium
@@ -77,6 +77,9 @@ fi
 /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %changelog
+* Tue Nov 25 2025 GitHub Action <action@github.com> - 0.6.7.1
+- Auto-updated to version 0.6.7.1
+
 * Tue Nov 26 2024 jhuang6451 <xplayerhtz123@gmail.com> - 0.6.7.1-2
 - Replace wrapper script
 
