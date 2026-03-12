@@ -1,5 +1,5 @@
 %define app_name helium
-%define version 0.9.4.1
+%define version 0.10.2.1
 
 Name:           helium-browser
 Version:        %{version}
@@ -77,6 +77,9 @@ fi
 /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %changelog
+* Thu Mar 12 2026 GitHub Action <action@github.com> - 0.10.2.1
+- Auto-updated to version 0.10.2.1
+
 * Wed Mar 11 2026 GitHub Action <action@github.com> - 0.9.4.1
 - Auto-updated to version 0.9.4.1
 
